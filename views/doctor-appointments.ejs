@@ -1,0 +1,55 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+  <h2 class="mb-4 text-center">My Appointments</h2>
+
+  <% if (appointments.length === 0) { %>
+    <div class="alert alert-info text-center">No appointments found.</div>
+  <% } else { %>
+    <table class="table table-bordered table-striped">
+      <thead class="table-primary text-center">
+        <tr>
+          <th>Patient Name</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% appointments.forEach(appt => { %>
+          <tr>
+            <td><%= appt.patient_name %></td>
+            <td><%= appt.date.toISOString().slice(0, 10) %></td>
+            <td><%= appt.time %></td>
+            <td><%= appt.reason %></td>
+            <td class="text-center">
+              <% if (appt.status === 'Admitted') { %>
+                <span class="badge bg-info">Admitted</span>
+              <% } else if (appt.status === 'Completed') { %>
+                <span class="badge bg-success">Completed</span>
+              <% } else { %>
+                <span class="badge bg-secondary"><%= appt.status %></span>
+              <% } %>
+            </td>
+            <td class="text-center">
+              <% if (appt.status === 'Scheduled') { %>
+                <form action="/staff/admit" method="POST" class="d-inline">
+                  <input type="hidden" name="appointment_id" value="<%= appt.id %>">
+                  <input type="hidden" name="patient_id" value="<%= appt.patient_id %>">
+                  <input type="text" name="room_number" class="form-control form-control-sm mb-1" placeholder="Room #" required>
+                  <button type="submit" class="btn btn-sm btn-success">Admit</button>
+                </form>
+              <% } else { %>
+                <em>N/A</em>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

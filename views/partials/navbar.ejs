@@ -1,0 +1,19 @@
+<nav class="navbar">
+    <a href="/">Home</a>
+    <% if (user) { %>
+      <% if (user.role === 'Admin') { %>
+        <a href="/admin/dashboard">Admin Dashboard</a>
+      <% } else if (user.role === 'Doctor') { %>
+        <a href="/staff/dashboard">Doctor Dashboard</a>
+      <% } else if (user.role === 'Nurse') { %>
+        <a href="/staff/dashboard">Nurse Dashboard</a>
+      <% } else if (user.role === 'Patient') { %>
+        <a href="/patient/dashboard">Patient Dashboard</a>
+      <% } %>
+      <a href="/logout">Logout</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/register-patient">Register</a>
+    <% } %>
+  </nav>
+  

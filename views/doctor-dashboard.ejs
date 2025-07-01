@@ -1,0 +1,154 @@
+<%- include('partials/header') %>
+
+<div class="container mt-4">
+
+  <% if (success && success.length > 0) { %>
+    <div class="alert alert-success"><%= success[0] %></div>
+  <% } %>
+  <% if (error && error.length > 0) { %>
+    <div class="alert alert-danger"><%= error[0] %></div>
+  <% } %>
+
+  <h2 class="mb-3">Welcome, Dr. <%= doctor.name %></h2>
+
+  <!-- Filter Controls -->
+  <div class="card p-3 mb-4">
+    <form class="row g-3" method="GET" action="/staff/appointments/filter" novalidate>
+      <div class="col-md-4">
+        <input type="date" name="date" class="form-control" value="<%= filterDate || '' %>">
+      </div>
+      <div class="col-md-4">
+        <select name="status" class="form-select">
+          <option value="">All Statuses</option>
+          <% ['Pending', 'Confirmed', 'Completed'].forEach(status => { %>
+            <option value="<%= status %>" <%= filterStatus === status ? 'selected' : '' %>><%= status %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-primary w-100">Filter Appointments</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Appointments -->
+  <h4>Your Appointments</h4>
+  <% if (appointments.length > 0) { %>
+    <table class="table table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% appointments.forEach(appt => { %>
+          <tr>
+            <td><%= appt.patient_name %></td>
+            <td><%= appt.date.toISOString().slice(0, 10) %></td>
+            <td><%= appt.time %></td>
+            <td><%= appt.reason %></td>
+            <td><%= appt.status %></td>
+            <td>
+              <!-- Prescribe -->
+              <form action="/prescriptions/new" method="GET" class="mb-1">
+                <input type="hidden" name="patient_id" value="<%= appt.patient_id %>">
+                <input type="hidden" name="appointment_id" value="<%= appt.id %>">
+                <button type="submit" class="btn btn-success btn-sm w-100">Prescribe</button>
+              </form>
+
+              <!-- Admit Form -->
+              <form action="/staff/admit" method="POST" class="mb-1">
+                <input type="hidden" name="patient_id" value="<%= appt.patient_id %>">
+                <input type="hidden" name="appointment_id" value="<%= appt.id %>">
+                
+                <label class="form-label mb-1">Room</label>
+                <select name="room_number" class="form-select form-select-sm mb-1" required>
+                  <% rooms.filter(r => !r.is_occupied).forEach(room => { %>
+                    <option value="<%= room.room_number %>">
+                      Room <%= room.room_number %> – Nurse: <%= room.nurse_name || 'Unassigned' %>
+                    </option>
+                  <% }) %>
+                </select>
+
+                <select name="assign_nurse" class="form-select form-select-sm mb-1">
+                  <option value="yes" selected>Auto-assign Nurse</option>
+                  <option value="no">Don't assign</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary btn-sm w-100">Admit</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No appointments found.</p>
+  <% } %>
+
+  <!-- Manual Prescription -->
+  <h4 class="mt-4">Manual Prescription</h4>
+  <form method="POST" action="/prescriptions/add" class="row g-3 mb-4" novalidate>
+    <div class="col-md-4">
+      <label for="patientSelect" class="form-label">Patient</label>
+      <select id="patientSelect" name="patient_id" class="form-select" required>
+        <% patients.forEach(p => { %>
+          <option value="<%= p.id %>"><%= p.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="diagnosisInput" class="form-label">Diagnosis</label>
+      <input id="diagnosisInput" type="text" name="diagnosis" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+      <label for="treatmentInput" class="form-label">Treatment</label>
+      <input id="treatmentInput" type="text" name="treatment" class="form-control" required>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-success" type="submit">Add Prescription</button>
+    </div>
+  </form>
+
+  <!-- Quick Discharge -->
+  <h4 class="mt-4">Quick Discharge</h4>
+  <% if (admittedPatients.length > 0) { %>
+    <table class="table table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Room</th>
+          <th>Nurse</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% admittedPatients.forEach(p => { %>
+          <tr>
+            <td><%= p.name %></td>
+            <td><%= p.room_number %></td>
+            <td><%= p.nurse_name || 'Unassigned' %></td>
+            <td>
+              <form method="POST" action="/staff/discharge">
+                <input type="hidden" name="admission_id" value="<%= p.admission_id %>">
+                <button type="submit" class="btn btn-danger btn-sm">Discharge</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No patients currently admitted.</p>
+  <% } %>
+
+  
+
+</div>
+
+<%- include('partials/footer') %>

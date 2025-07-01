@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+<section class="container mt-5">
+  <% if (success && success.length) { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
+  <% if (error && error.length) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
+  <h2>Create Prescription for <%= patient.name %></h2>
+  <form method="POST" action="/prescriptions/create" class="row g-3 mb-5">
+    <input type="hidden" name="patient_id"     value="<%= patient.id %>">
+    <input type="hidden" name="appointment_id" value="<%= appointment_id %>">
+
+    <div class="col-12">
+      <label for="diagnosis" class="form-label">Diagnosis</label>
+      <textarea id="diagnosis" name="diagnosis" class="form-control" required></textarea>
+    </div>
+
+    <div class="col-12">
+      <label for="treatment" class="form-label">Treatment</label>
+      <textarea id="treatment" name="treatment" class="form-control" required></textarea>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-success">Submit Prescription</button>
+      <a href="/staff/dashboard" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+  </form>
+
+  <h4>Previous Prescriptions</h4>
+  <% if (prescriptions.length > 0) { %>
+    <ul class="list-group">
+      <% prescriptions.forEach(pres => { %>
+        <li class="list-group-item">
+          <strong><%= new Date(pres.date).toLocaleDateString('en-IN', {
+             year:'numeric', month:'long', day:'numeric'
+          }) %>:</strong>
+          <%= pres.diagnosis %> — <%= pres.treatment %>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>No previous prescriptions.</p>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,82 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+  <h2 class="mb-4 text-center">Staff Registration</h2>
+
+  <% if (error) { %>
+    <div class="alert alert-danger text-center"><%= error %></div>
+  <% } %>
+
+  <form method="POST" action="/staff/register" class="mx-auto" style="max-width: 500px;">
+    <div class="mb-3">
+      <label for="first_name" class="form-label">First Name</label>
+      <input type="text" name="first_name" id="first_name" class="form-control" value="<%= formData.first_name || '' %>" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="last_name" class="form-label">Last Name</label>
+      <input type="text" name="last_name" id="last_name" class="form-control" value="<%= formData.last_name || '' %>" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" name="username" id="username" class="form-control" value="<%= formData.username || '' %>" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" name="password" id="password" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" name="email" id="email" class="form-control" value="<%= formData.email || '' %>" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="roleSelect" class="form-label">Role</label>
+      <select name="role" id="roleSelect" class="form-select" required>
+        <option value="">Select Role</option>
+        <option value="Doctor" <%= formData.role === 'Doctor' ? 'selected' : '' %>>Doctor</option>
+        <option value="Nurse" <%= formData.role === 'Nurse' ? 'selected' : '' %>>Nurse</option>
+      </select>
+    </div>
+
+    <div class="mb-3" id="specializationDiv" style="display:none;">
+      <label for="specialization" class="form-label">Specialization (for Doctors)</label>
+      <input type="text" name="specialty" id="specialization" class="form-control" value="<%= formData.specialty || '' %>">
+    </div>
+
+    <div class="mb-3">
+      <label for="position" class="form-label">Position</label>
+      <input type="text" name="position" id="position" class="form-control" value="<%= formData.position || '' %>" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone</label>
+      <input type="text" name="phone" id="phone" class="form-control" value="<%= formData.phone || '' %>" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Register</button>
+
+    <div class="text-center mt-3">
+      <a href="/admin/register" class="btn btn-link">Register as Admin</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  const roleSelect = document.getElementById('roleSelect');
+  const specDiv = document.getElementById('specializationDiv');
+
+  function toggleSpecialization() {
+    specDiv.style.display = roleSelect.value === 'Doctor' ? 'block' : 'none';
+  }
+
+  roleSelect.addEventListener('change', toggleSpecialization);
+
+  // On page load, show specialization if role is Doctor (e.g., after validation error)
+  window.onload = toggleSpecialization;
+</script>
+
+<%- include('partials/footer') %>

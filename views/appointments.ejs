@@ -1,0 +1,54 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+  <h2 class="mb-4 text-center">Appointments</h2>
+
+  <% if (role === 'patient') { %>
+    <form method="POST" action="/appointments/book" class="mb-4" style="max-width: 600px;">
+      <div class="mb-3">
+        <label for="doctor_id">Doctor ID</label>
+        <input type="number" id="doctor_id" name="doctor_id" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="time">Time</label>
+        <input type="time" id="time" name="time" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="reason">Reason</label>
+        <textarea id="reason" name="reason" class="form-control" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Book Appointment</button>
+    </form>
+  <% } %>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Patient ID</th>
+        <th>Doctor ID</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Reason</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% appointments.forEach(a => { %>
+        <tr>
+          <td><%= a.patient_id %></td>
+          <td><%= a.doctor_id %></td>
+          <td><%= a.appointment_date.toISOString().split('T')[0] %></td>
+          <td><%= a.start_time.slice(0, 5) %></td>
+          <td><%= a.notes %></td>
+          <td><%= a.status || 'Pending' %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('partials/footer') %>

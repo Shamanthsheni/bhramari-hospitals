@@ -1,0 +1,100 @@
+<%- include('partials/header') %>
+
+<div class="container mt-4">
+  <% if (typeof success === 'string' && success.trim() !== '') { %>
+  <div class="alert alert-success"><%= success %></div>
+  <% } %>
+  <% if (typeof error === 'string' && error.trim() !== '') { %>
+  <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
+  <!-- Welcome message -->
+  <h2 class="mb-4">Welcome Nurse - <%= user.name %>!</h2>
+
+  <!-- Assigned Work Section -->
+  <h4>Your Assigned Work</h4>
+  <% 
+    // Since nurse is assigned to only one room, get the first assignedRoom or null
+    const nurseRoom = assignedRooms.length > 0 ? assignedRooms[0] : null; 
+  %>
+  <% if (!nurseRoom) { %>
+    <p>No room assigned to you currently.</p>
+  <% } else { %>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Room Number</th>
+          <th>Patient Name</th>
+          <th>Admitted By Doctor</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= nurseRoom.room_number %></td>
+          <td><%= nurseRoom.patient_name || 'N/A' %></td>
+          <td><%= nurseRoom.doctor_name || 'N/A' %></td>
+          <td>
+            <% if (nurseRoom.patient_name) { %>
+              <form method="POST" action="/staff/discharge" style="display:inline;">
+                <input type="hidden" name="room_number" value="<%= nurseRoom.room_number %>">
+                <button class="btn btn-danger btn-sm" type="submit">Mark as Free</button>
+              </form>
+            <% } else { %>
+              <span class="text-success">Room Free</span>
+            <% } %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  <% } %>
+
+  <!-- Room Chart -->
+  <h4 class="mt-5">Room Chart</h4>
+  <div class="row">
+    <% assignedRooms.forEach(room => { %>
+      <% let roomClass = room.patient_name ? 'room-occupied' : 'room-free'; %>
+      <div class="col-md-3 mb-4">
+        <div class="card room-card <%= roomClass %> shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title text-primary">Room <%= room.room_number %></h5>
+            <% if (room.patient_name) { %>
+              <p class="card-text">Patient: <%= room.patient_name %></p>
+              <p class="card-text">Doctor: <%= room.doctor_name || 'N/A' %></p>
+            <% } else { %>
+              <p class="card-text text-success">Status: Free</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <!-- Transfer Patient Section -->
+  <h4 class="mt-5">Transfer Patient</h4>
+  <form method="POST" action="/nurse/transfer" class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">From Room</label>
+      <select name="from_room" class="form-select" required>
+        <% assignedRooms.filter(r => r.patient_name).forEach(r => { %>
+          <option value="<%= r.room_number %>">Room <%= r.room_number %> - <%= r.patient_name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">To Room</label>
+      <select name="to_room" class="form-select" required>
+        <% allRooms.filter(r => {
+          return !assignedRooms.some(ar => ar.room_number === r.room_number && ar.patient_name);
+        }).forEach(r => { %>
+          <option value="<%= r.room_number %>">Room <%= r.room_number %> (Free)</option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <button class="btn btn-warning w-100" type="submit">Transfer</button>
+    </div>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

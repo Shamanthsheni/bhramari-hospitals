@@ -1,0 +1,71 @@
+<%- include('partials/header') %>
+
+<div class="w-100">
+  <img src="/images/hospital-banner.jpg" alt="Modern hospital" class="img-fluid" style="width: 100%; height: auto; max-height: 400px; object-fit: cover;">
+</div>
+
+<section class="hero-section text-white text-center d-flex align-items-center justify-content-center" style="height: 40vh;">
+  <div class="p-3">
+    <h1 class="fw-bold fs-2">Welcome to Bhramari Hospitals</h1>
+    <p class="lead">Manage appointments, doctor schedules & hospital resources seamlessly.</p>
+    <a href="#role-selection" class="btn btn-light mt-3">Get Started</a>
+  </div>
+</section>
+
+<section id="role-selection" class="container my-5">
+  <h2 class="text-center mb-4">Choose Your Role</h2>
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card shadow h-100 text-center border-0" role="button" onclick="window.location='/auth/login?type=patient'">
+        <div class="card-body">
+          <i class="fa-solid fa-user-injured fa-4x text-primary mb-3"></i>
+          <h3 class="card-title">I am a Patient</h3>
+          <p class="card-text">Book appointments and manage your healthcare easily.</p>
+          <a href="/auth/login?type=patient" class="btn btn-primary mt-2">Continue as Patient</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow h-100 text-center border-0" role="button" onclick="window.location='/auth/login?type=staff'">
+        <div class="card-body">
+          <i class="fa-solid fa-user-doctor fa-4x text-primary mb-3"></i>
+          <h3 class="card-title">I am a Staff Member</h3>
+          <p class="card-text">Access patient data and manage hospital operations.</p>
+          <a href="/auth/login?type=staff" class="btn btn-primary mt-2">Continue as Staff</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container my-5">
+  <h2 class="text-center mb-4">Core Features</h2>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100 shadow border-0">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fa-solid fa-calendar-check me-2 text-primary"></i>Appointment Booking</h5>
+          <p class="card-text">Patients can easily book, cancel, or reschedule appointments.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow border-0">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fa-solid fa-user-clock me-2 text-primary"></i>Doctor Schedule Management</h5>
+          <p class="card-text">Doctors can manage daily appointments and consult patients.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow border-0">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fa-solid fa-bed-pulse me-2 text-primary"></i>Room & Resource Management</h5>
+          <p class="card-text">Efficiently manage room assignments and patient resources.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

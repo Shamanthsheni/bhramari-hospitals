@@ -1,0 +1,14 @@
+<%- include('partials/header') %>
+<div class="form-container">
+  <h2>Register as Patient</h2>
+  <form action="/register-patient" method="POST">
+    <label>Name</label><input type="text" name="name" required>
+    <label>Age</label><input type="number" name="age" required>
+    <label>Gender</label><select name="gender"><option>Male</option><option>Female</option></select>
+    <label>Contact</label><input type="text" name="contact" required>
+    <label>Username</label><input type="text" name="username" required>
+    <label>Password</label><input type="password" name="password" required>
+    <button type="submit" class="btn btn-blue">Register</button>
+  </form>
+</div>
+<%- include('partials/footer') %>

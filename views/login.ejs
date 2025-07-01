@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+  <h2 class="text-center mb-4 text-primary">
+    <% if (role === 'patient') { %>
+      <i class="fa-solid fa-user-injured me-2 text-primary"></i> Patient Login
+    <% } else { %>
+      <i class="fa-solid fa-user-doctor me-2 text-primary"></i> Staff Login
+    <% } %>
+  </h2>
+
+  <% if (typeof error !== 'undefined' && error && error.trim() !== '') { %>
+    <div class="alert alert-danger text-center"><%= error %></div>
+  <% } %>
+  
+  <form method="POST" action="/auth/login" class="mx-auto" style="max-width: 400px;">
+    <input type="hidden" name="role" value="<%= role %>">
+    
+    <div class="mb-3">
+      <label class="form-label">Username or Email</label>
+      <input type="text" name="username" class="form-control" required>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+
+    <% if (role === 'staff') { %>
+      <div class="text-center mt-3">
+        <a href="/staff/register">Staff Registration</a> |
+        <a href="/admin/register">Admin Registration</a>
+      </div>
+    <% } else if (role === 'patient') { %>
+      <div class="text-center mt-3">
+        <a href="/auth/register/patient">Patient Registration</a>
+      </div>
+    <% } %>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

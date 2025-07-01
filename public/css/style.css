@@ -1,0 +1,104 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.hero-section {
+  background-color: #007bff;
+  color: white;
+  padding: 40px 0;
+}
+
+.card {
+  border-radius: 1rem;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #e9ecef;
+  margin-top: 40px;
+  color: #666;
+}
+
+.room-card {
+  border-radius: 1rem;
+  text-align: center;
+  color: #333; /* changed to dark for readability */
+  padding: 1rem;
+  margin: 10px;
+  border: 1px solid #ccc;
+  transition: transform 0.2s ease;
+}
+
+.room-card:hover {
+  transform: scale(1.02);
+}
+
+/* New room status background classes */
+.room-occupied {
+  background-color: #f8d7da;  /* light red */
+  color: #721c24;              /* dark red text for contrast */
+}
+
+.room-available {
+  background-color: #d4edda;  /* light green */
+  color: #155724;              /* dark green text for contrast */
+}
+
+.alert {
+  border-radius: 0.5rem;
+}
+
+.btn {
+  border-radius: 0.5rem;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+input, select, textarea {
+  border-radius: 0.5rem !important;
+}
+
+/* Preserve your bootstrap overrides */
+.bg-success {
+  background-color: #28a745 !important; /* Bootstrap green */
+}
+
+.bg-danger {
+  background-color: #dc3545 !important; /* Bootstrap red */
+}
+
+/* Room status alternative view styling */
+.room-alt {
+  border: 1px solid #ccc;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 0.5rem;
+  color: #333;
+}
+
+.room-alt.occupied {
+  background-color: #f8d7da;  /* light red */
+  color: #721c24;              /* dark red text */
+}
+
+.room-alt.available {
+  background-color: #d4edda;  /* light green */
+  color: #155724;              /* dark green text */
+}
+

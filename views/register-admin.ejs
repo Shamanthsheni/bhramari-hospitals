@@ -1,0 +1,35 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+  <h2 class="mb-4 text-center">Admin Registration</h2>
+
+  <% if (error) { %>
+    <div class="alert alert-danger text-center"><%= error %></div>
+  <% } %>
+
+  <form method="POST" action="/admin/register" class="mx-auto" style="max-width: 500px;">
+    <div class="mb-3">
+      <label>Name</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label>Username</label>
+      <input type="text" name="username" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label>Password</label>
+      <input type="password" name="password" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" name="email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label>Admin Key</label>
+      <input type="text" name="adminKey" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Register</button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

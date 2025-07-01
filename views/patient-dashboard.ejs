@@ -1,0 +1,91 @@
+<%- include('partials/header') %>
+
+<section class="container mt-5">
+  <h2>Welcome, <%= user.first_name %> <%= user.last_name %>!</h2>
+
+  <!-- Admission Info -->
+  <div class="alert alert-info mt-3">
+    <strong>Admission Status:</strong>
+    <% if (admissionInfo.admission_status.toLowerCase() === 'admitted') { %>
+      Admitted in Room <strong><%= admissionInfo.room_number %></strong> |
+      Assigned Nurse: <strong><%= admissionInfo.assigned_nurse || 'Not Assigned' %></strong>
+    <% } else { %>
+      Not Admitted
+    <% } %>
+  </div>
+
+  <!-- Book Appointment -->
+  <h3>Book an Appointment</h3>
+  <form action="/appointments/book" method="POST">
+    <div class="mb-3">
+      <label for="doctor" class="form-label">Choose Doctor</label>
+      <select id="doctor" name="doctor_id" class="form-select" required>
+        <% doctors.forEach(function(doctor) { %>
+          <option value="<%= doctor.id %>"><%= doctor.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="date" class="form-label">Appointment Date</label>
+      <input type="date" id="date" name="date" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="time" class="form-label">Appointment Time</label>
+      <input type="time" id="time" name="time" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="reason" class="form-label">Reason for Visit</label>
+      <textarea id="reason" name="reason" class="form-control" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book Appointment</button>
+  </form>
+
+  <!-- Upcoming Appointments Section -->
+  <h3 class="mt-5">Your Upcoming Appointments</h3>
+  <% if (appointments.length > 0) { %>
+    <ul class="list-group">
+      <% appointments.forEach(function(appointment) { %>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <% if (appointment.appointment_date) { %>
+              <%= new Date(appointment.appointment_date).toISOString().slice(0, 10) %> at
+              <%= appointment.start_time || 'Time not available' %> with
+              <%= appointment.staff_name || 'Staff name not available' %>
+            <% } else { %>
+              Appointment date not available
+            <% } %>
+          </div>
+          <form action="/appointments/cancel/<%= appointment.id %>" method="POST" class="m-0">
+            <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>You have no upcoming appointments.</p>
+  <% } %>
+
+  <!-- Prescription History Section -->
+  <h3 class="mt-5">Your Prescriptions</h3>
+  <% if (prescriptions.length > 0) { %>
+    <ul class="list-group">
+      <% prescriptions.forEach(function(prescription) { %>
+        <li class="list-group-item">
+          <strong><%= prescription.diagnosis %></strong> - <%= prescription.treatment %> 
+          (Issued on: <%= new Date(prescription.date).toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }) %>)
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>You have no prescriptions.</p>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

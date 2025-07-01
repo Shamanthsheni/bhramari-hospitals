@@ -1,0 +1,144 @@
+<%- include('partials/header') %>
+
+<section class="container mt-5">
+  <h2>Welcome, Admin <%= admin?.name || 'User' %>!</h2>
+  <p>Manage hospital operations, rooms, and appointments.</p>
+
+  <!-- Room Management Section -->
+  <h3>Manage Rooms</h3>
+  <form action="/admin/rooms/add" method="POST" class="mb-4">
+    <div class="mb-3">
+      <label for="room_number" class="form-label">Room Number</label>
+      <input type="number" id="room_number" name="room_number" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Room</button>
+  </form>
+
+  <!-- Graphical Room Status (Bootstrap Cards) -->
+  <h3 class="mt-4">Room Occupancy Status</h3>
+  <div class="row">
+    <% if (rooms && rooms.length > 0) { %>
+      <% rooms.forEach(function(room) { 
+          const status = (room.status || room.room_status || '').toLowerCase();
+      %>
+        <div class="col-md-3">
+          <div class="card mb-4 text-white <%= status === 'occupied' ? 'bg-danger' : 'bg-success' %>">
+            <div class="card-body">
+              <h5>Room <%= room.room_number %></h5>
+              <% if(status === 'occupied') { %>
+                <p><strong>Patient:</strong> <%= room.patient_name || 'Unknown' %></p>
+                <p><strong>Nurse:</strong> <%= room.nurse_name || 'Unassigned' %></p>
+              <% } else { %>
+                <p>Available</p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p>No rooms found.</p>
+    <% } %>
+  </div>
+
+
+  <!-- Appointment Overview -->
+  <h3 class="mt-4">Appointments Overview</h3>
+  <p>Total appointments: <%= totalAppointments || 0 %></p>
+
+  <h5>Appointments by Doctor:</h5>
+  <ul>
+    <% if (appointmentsByDoctor && appointmentsByDoctor.length > 0) { %>
+      <% appointmentsByDoctor.forEach(function(doc) { %>
+        <li><%= doc.doctor_name || 'Unknown Doctor' %>: <%= doc.count %> appointments</li>
+      <% }); %>
+    <% } else { %>
+      <li>No appointment data available.</li>
+    <% } %>
+  </ul>
+
+  <!-- Patient Overview -->
+  <h3 class="mt-4">All Patients</h3>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (patients && patients.length > 0) { %>
+          <% patients.forEach(function(p) { %>
+            <tr>
+              <td><%= p.id %></td>
+              <td><%= p.name %></td>
+              <td><%= p.username %></td>
+              <td><%= p.email %></td>
+              <td><%= p.phone %></td>
+              <td><%= p.admission_status || 'N/A' %></td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr><td colspan="6">No patient records found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Staff Overview -->
+  <h3 class="mt-4">All Staff</h3>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Specialization</th>
+          <th>Contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (staff && staff.length > 0) { %>
+          <% staff.forEach(function(s) { %>
+            <tr>
+              <td><%= s.id %></td>
+              <td><%= s.name %></td>
+              <td><%= s.username %></td>
+              <td><%= s.email %></td>
+              <td><%= s.role %></td>
+              <td><%= s.specialization || '-' %></td>
+              <td><%= s.contact || '-' %></td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr><td colspan="7">No staff records found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Appointment Transfer -->
+  <h3 class="mt-4">Transfer Appointments</h3>
+  <form action="/admin/transfer-appointment" method="POST" class="mb-5">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="fromDoctorId" class="form-label">From Doctor ID</label>
+        <input type="number" class="form-control" name="fromDoctorId" required>
+      </div>
+      <div class="col-md-6">
+        <label for="toDoctorId" class="form-label">To Doctor ID</label>
+        <input type="number" class="form-control" name="toDoctorId" required>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-warning">Transfer Appointments</button>
+  </form>
+</section>
+
+<%- include('partials/footer') %>
